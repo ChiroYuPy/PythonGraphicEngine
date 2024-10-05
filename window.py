@@ -1,8 +1,13 @@
 import inspect
 from enum import Enum
 import glfw
-from OpenGL.raw.GL.VERSION.GL_1_0 import glClearColor, glClear, GL_COLOR_BUFFER_BIT
+from OpenGL.GL import glClearColor, glClear, GL_COLOR_BUFFER_BIT, glBegin, GL_LINES, glVertex3fv, \
+    glEnable, glLoadIdentity, glMatrixMode, GL_PROJECTION, GL_DEPTH_TEST, GL_MODELVIEW, glEnd, GL_DEPTH_BUFFER_BIT, \
+    glTranslatef, glRotatef
+from OpenGL.GLU import gluPerspective
+
 from color import Color
+from vector import Vector2
 
 
 class Event(Enum):
@@ -39,6 +44,9 @@ class Window:
         self.auto_iconify = auto_iconify
         self.maximize = maximize
 
+        self.mouse_pos = Vector2()
+        self.mouse_active = True
+
         self.glfw_window = None
         self.events = {}
         self.init_glfw()
@@ -61,6 +69,12 @@ class Window:
 
         glfw.make_context_current(self.glfw_window)
 
+        glEnable(GL_DEPTH_TEST)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(45, 800 / 600, 0.1, 50.0)
+        glMatrixMode(GL_MODELVIEW)
+
         # Setup event callbacks
         glfw.set_window_user_pointer(self.glfw_window, self)
 
@@ -77,7 +91,7 @@ class Window:
 
     def clear(self, color=Color(0.0, 0.0, 0.0, 1.0)):
         glClearColor(color.r, color.g, color.b, color.a)
-        glClear(GL_COLOR_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     def close(self):
         print(f"{self.__class__.__name__} is closing")
@@ -90,6 +104,16 @@ class Window:
     def set_size(self, width, height):
         glfw.set_window_size(self.glfw_window, width, height)
 
+    def set_mouse_active(self, value):
+        if value is True:
+            glfw.set_input_mode(self.glfw_window, glfw.CURSOR, glfw.CURSOR_NORMAL)
+        else:
+            glfw.set_input_mode(self.glfw_window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+        self.mouse_active = value
+
+    def get_mouse_active(self):
+        return self.mouse_active
+
     def event(self, func):
         num_params = len(inspect.signature(func).parameters)
 
@@ -100,7 +124,7 @@ class Window:
             raise ValueError(f"The '{Event.ON_MOUSE_PRESS.value}' event handler must accept exactly 1 parameter.")
         elif func.__name__ == Event.ON_MOUSE_RELEASE.value and num_params != 1:
             raise ValueError(f"The '{Event.ON_MOUSE_RELEASE.value}' event handler must accept exactly 1 parameter.")
-        elif func.__name__ == Event.ON_MOUSE_MOVE.value and num_params != 2:
+        elif func.__name__ == Event.ON_MOUSE_MOVE.value and num_params != 4:
             raise ValueError(f"The '{Event.ON_MOUSE_MOVE.value}' event handler must accept exactly 2 parameters.")
         elif func.__name__ == Event.ON_WINDOW_CLOSE.value and num_params != 0:
             raise ValueError(f"The '{Event.ON_WINDOW_CLOSE.value}' event handler must accept exactly 0 parameters.")
@@ -133,7 +157,10 @@ class Window:
             self.call_event(Event.ON_MOUSE_RELEASE.value, button)
 
     def cursor_position_callback(self, window, xpos, ypos):
-        self.call_event(Event.ON_MOUSE_MOVE.value, xpos, ypos)
+        dx, dy = self.mouse_pos.x - xpos, self.mouse_pos.y - ypos
+        self.mouse_pos.x = xpos
+        self.mouse_pos.y = ypos
+        self.call_event(Event.ON_MOUSE_MOVE.value, xpos, ypos, dx, dy)
 
     def window_close_callback(self, window):
         self.call_event(Event.ON_WINDOW_CLOSE.value)

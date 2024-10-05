@@ -13,8 +13,8 @@ class Entity:
     def add_component(self, component: Component):
         self.components[component.__class__.__name__] = component
 
-    def get_component(self, component_name: str) -> Component:
-        return self.components[component_name.__class__.__name__]
+    def get_component(self, component: type[Component]) -> Component | None:
+        return self.components.get(component.__name__)
 
     def try_has_component(self, component_name: str):
         return component_name in self.components

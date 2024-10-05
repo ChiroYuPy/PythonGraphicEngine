@@ -6,7 +6,7 @@ class Component:
 
 
 class Transform(Component):
-    def __init__(self, position: Vector3, rotation: Vector3, scale: Vector3):
+    def __init__(self, position: Vector3, rotation: Vector3 = Vector3(), scale: Vector3 = Vector3()):
         self.position = position
         self.rotation = rotation
         self.scale = scale

@@ -5,10 +5,10 @@ from window import Window
 
 
 class App:
-    def __init__(self):
+    def __init__(self, max_fps):
         self.running = True
         self.events = {}
-        self.clock = Clock(max_fps=60)
+        self.clock = Clock(max_fps=max_fps)
 
     def run(self):
         while self.running:
