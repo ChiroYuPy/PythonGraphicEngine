@@ -50,9 +50,8 @@ if __name__ == '__main__':
     @window.event
     def on_draw():
         window.clear()
-        render_system.render(Entity.entities)   
+        render_system.render(Entity.entities)
 
-    # Run the application
     app.run()
 ```
 
