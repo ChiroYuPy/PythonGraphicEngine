@@ -15,6 +15,8 @@ class Camera:
         self.near = near
         self.far = far
 
+        self.set_main_camera(self)
+
     def set_position(self, position):
         self.position = position
 
@@ -29,3 +31,7 @@ class Camera:
         glRotatef(-self.rotation.x, 1.0, 0.0, 0.0)  # Rotate around x-axis
         glRotatef(-self.rotation.y, 0.0, 1.0, 0.0)  # Rotate around y-axis
         glTranslatef(self.position.x, self.position.y, self.position.z)  # Move camera to position
+
+    @staticmethod
+    def set_main_camera(camera):
+        Camera.main = camera

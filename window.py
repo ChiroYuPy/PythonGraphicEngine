@@ -99,6 +99,7 @@ class Window:
         glfw.terminate()
 
     def set_position(self, x, y):
+        x, y = int(x), int(y)
         glfw.set_window_pos(self.glfw_window, x, y)
 
     def set_size(self, width, height):

@@ -23,6 +23,20 @@ class Material(Component):
         self.shininess = shininess
 
 
+class RigidBody(Component):
+    def __init__(self, linear_velocity: Vector3 = Vector3(),
+                 acceleration: Vector3 = Vector3(),
+                 angular_velocity: Vector3 = Vector3(),
+                 mass=1, friction=1, elasticity=1):
+
+        self.linear_velocity = linear_velocity
+        self.acceleration = acceleration
+        self.angular_velocity = angular_velocity
+        self.mass = mass
+        self.friction = friction
+        self.elasticity = elasticity
+
+
 class Light(Component):
     def __init__(self, position, ambient, diffuse, specular):
         self.position = position
