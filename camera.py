@@ -6,6 +6,8 @@ from vector import Vector3
 
 
 class Camera:
+    main = None
+
     def __init__(self, position=Vector3(0.0, 0.0, -10.0), rotation=Vector3(0.0, 0.0, 0.0), fov=90.0, aspect_ratio=800 / 600, near=0.1, far=50.0):
         self.position = position
         self.rotation = rotation

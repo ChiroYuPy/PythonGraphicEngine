@@ -15,7 +15,6 @@ class RenderSystem:
         glMatrixMode(GL_MODELVIEW)
 
     def render(self, entities):
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # Clear color and depth buffers
 
         Camera.main.apply_view()  # Apply the camera view transformation
 

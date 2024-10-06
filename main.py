@@ -37,13 +37,14 @@ if __name__ == '__main__':
     render_system = RenderSystem(window)
     physic_system = PhysicSystem()
 
-    black = Color(0, 0, 0)
+    black = Color(1, 0, 0)
 
     keys_pressed = set()
     camera_movement_speed = 10
 
     @app.event
     def update(dt):
+        print(1/dt)
 
         if KEY_S in keys_pressed:
             camera.position.z -= camera_movement_speed * dt
